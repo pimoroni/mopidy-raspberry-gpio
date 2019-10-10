@@ -6,7 +6,6 @@ from mopidy import core
 
 import pykka
 
-from.pinconfig import PinConfig
 
 logger = logging.getLogger(__name__)
 
@@ -27,13 +26,10 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
         for key in self.config:
             if key.startswith("bcm"):
                 pin = int(key.replace("bcm", ""))
-                # settings = PinConfig().deserialize(
-                #     self.config[key]
-                # )
                 settings = self.config[key]
                 if settings is None:
                     continue
-                
+
                 pull = GPIO.PUD_UP
                 edge = GPIO.FALLING
                 if settings.active == 'active_high':

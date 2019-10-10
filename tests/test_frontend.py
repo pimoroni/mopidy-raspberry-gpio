@@ -6,12 +6,16 @@ import mock
 
 import pytest
 
-from mopidy_raspberry_gpio import Extension, frontend as frontend_lib
+from mopidy_raspberry_gpio import Extension, pinconfig
+from mopidy_raspberry_gpio import frontend as frontend_lib
 
+
+deserialize = pinconfig.PinConfig().deserialize
 
 dummy_config = {
     "raspberry-gpio": {
-        "bcm1": "play_pause,active_low,30"
+        # Plugins expect settings to be deserialized
+        "bcm1": deserialize("play_pause,active_low,30")
     }
 }
 
