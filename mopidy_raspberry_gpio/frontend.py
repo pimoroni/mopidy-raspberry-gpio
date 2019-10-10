@@ -76,10 +76,12 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
 
     def handle_volume_up(self):
         volume = self.core.playback.volume.get()
-        volume += 10
+        volume += 5
+        volume = min(volume, 100)
         self.core.playback.volume = volume
 
     def handle_volume_down(self):
         volume = self.core.playback.volume.get()
-        volume -= 10
+        volume -= 5
+        volume = max(volume, 0)
         self.core.playback.volume = volume
