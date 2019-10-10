@@ -3,7 +3,7 @@ from collections import namedtuple
 from mopidy import config
 
 
-class PinConfig(config.String):
+class PinConfig(config.ConfigValue):
     tuple_pinconfig = namedtuple("PinConfig",
                                  ("event", "active", "bouncetime"))
 
@@ -12,11 +12,18 @@ class PinConfig(config.String):
     valid_modes = "active_low", "active_high"
 
     def __init__(self):
-        config.String.__init__(self, optional=True)
+        pass
 
     def deserialize(self, value):
-        value = config.String.deserialize(self, value)
-        event, active, bouncetime = value.split(',')
+        if value is None:
+            return None
+
+        value = config.decode(value).strip()
+
+        try:
+            event, active, bouncetime = value.split(',')
+        except ValueError:
+            return None
 
         if event not in self.valid_events:
             raise ValueError(
@@ -42,7 +49,8 @@ class PinConfig(config.String):
         return self.tuple_pinconfig(event, active, bouncetime)
 
     def serialize(self, value, display=False):
+        if value is None:
+            return ""
         value = "{:s},{:s},{:d}".format(
             value.event, value.active, value.bouncetime)
-        value = config.String.serialize(self, value, display)
-        return value
+        return config.encode(value)

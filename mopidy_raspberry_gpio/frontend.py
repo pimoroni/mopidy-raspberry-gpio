@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
     def __init__(self, config, core):
+        super(RaspberryGPIOFrontend, self).__init__()
         import RPi.GPIO as GPIO
         self.core = core
         self.config = config["raspberry-gpio"]
@@ -26,13 +27,16 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
         for key in self.config:
             if key.startswith("bcm"):
                 pin = int(key.replace("bcm", ""))
-                self.pin_settings[pin] = PinConfig().deserialize(
-                    self.config[key]
-                )
-
+                # settings = PinConfig().deserialize(
+                #     self.config[key]
+                # )
+                settings = self.config[key]
+                if settings is None:
+                    continue
+                
                 pull = GPIO.PUD_UP
                 edge = GPIO.FALLING
-                if self.pin_settings[pin].active == 'active_high':
+                if settings.active == 'active_high':
                     pull = GPIO.PUD_DOWN
                     edge = GPIO.RISING
 
@@ -45,7 +49,9 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
                     pin,
                     edge,
                     callback=self.gpio_event,
-                    bouncetime=self.pin_settings[pin].bouncetime)
+                    bouncetime=settings.bouncetime)
+
+                self.pin_settings[pin] = settings
 
     def gpio_event(self, pin):
         settings = self.pin_settings[pin]
@@ -54,7 +60,7 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
     def dispatch_input(self, event):
         handler_name = "handle_{}".format(event)
         try:
-            getattr(self, handler_name)(self)
+            getattr(self, handler_name)()
         except AttributeError:
             raise RuntimeError(
                 "Could not find input handler for event: {}".format(event)
