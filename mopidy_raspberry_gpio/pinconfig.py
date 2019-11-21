@@ -35,12 +35,12 @@ class PinConfig(config.ConfigValue):
 
         if event not in self.valid_events:
             raise ValueError(
-                f"invalid event for pin config {event} (Must be {valid_events})"
+                f"invalid event for pin config {event} (Must be {self.valid_events})"
             )
 
         if active not in self.valid_modes:
             raise ValueError(
-                f"invalid event for pin config {active} (Must be one of {valid_modes})"
+                f"invalid event for pin config {active} (Must be one of {self.valid_modes})"
             )
 
         try:
