@@ -1,12 +1,10 @@
 import sys
 
 import mock
-
 import pytest
-
-from mopidy_raspberry_gpio import Extension, pinconfig
+from mopidy_raspberry_gpio import Extension
 from mopidy_raspberry_gpio import frontend as frontend_lib
-
+from mopidy_raspberry_gpio import pinconfig
 
 deserialize = pinconfig.PinConfig().deserialize
 
