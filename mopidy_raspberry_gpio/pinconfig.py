@@ -1,14 +1,23 @@
+
 from collections import namedtuple
 
 from mopidy import config
+from mopidy.config import types
+
+
+class ValidList(list):
+    def __format__(self, format_string=None):
+        if format_string is None:
+            format_string = ", "
+        return format_string.join(self)
 
 
 class PinConfig(config.ConfigValue):
     tuple_pinconfig = namedtuple("PinConfig", ("event", "active", "bouncetime"))
 
-    valid_events = "play_pause", "prev", "next", "volume_up", "volume_down"
+    valid_events = ValidList(["play_pause", "prev", "next", "volume_up", "volume_down"])
 
-    valid_modes = "active_low", "active_high"
+    valid_modes = ValidList(["active_low", "active_high"])
 
     def __init__(self):
         pass
@@ -17,7 +26,7 @@ class PinConfig(config.ConfigValue):
         if value is None:
             return None
 
-        value = config.decode(value).strip()
+        value = types.decode(value).strip()
 
         try:
             event, active, bouncetime = value.split(",")
@@ -26,12 +35,12 @@ class PinConfig(config.ConfigValue):
 
         if event not in self.valid_events:
             raise ValueError(
-                f"invalid event for pin config {event} (Must be {', '.join(self.valid_events)})"
+                f"invalid event for pin config {event} (Must be {valid_events})"
             )
 
         if active not in self.valid_modes:
             raise ValueError(
-                f"invalid event for pin config {active} (Must be {', '.join(self.valid_modes)})"
+                f"invalid event for pin config {active} (Must be one of {valid_modes})"
             )
 
         try:
@@ -47,4 +56,4 @@ class PinConfig(config.ConfigValue):
         if value is None:
             return ""
         value = f"{value.event},{value.active},{value.bouncetime}"
-        return config.encode(value)
+        return types.encode(value)
