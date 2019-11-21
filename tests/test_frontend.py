@@ -11,7 +11,9 @@ deserialize = pinconfig.PinConfig().deserialize
 dummy_config = {
     "raspberry-gpio": {
         # Plugins expect settings to be deserialized
-        "bcm1": deserialize("play_pause,active_low,30")
+        "bcm1": deserialize("play_pause,active_low,30"),
+        "bcm2": deserialize("volume_up,active_high,30"),
+        "bcm3": deserialize("volume_down,active_high,30")
     }
 }
 
@@ -30,7 +32,52 @@ def test_get_frontend_classes():
     )
 
 
-def test_frontend_handler_dispatch():
+def test_frontend_handler_dispatch_play_pause():
+    sys.modules["RPi"] = mock.Mock()
+    sys.modules["RPi.GPIO"] = mock.Mock()
+
+    frontend = frontend_lib.RaspberryGPIOFrontend(dummy_config, mock.Mock())
+
+    frontend.dispatch_input("play_pause")
+
+
+def test_frontend_handler_dispatch_next():
+    sys.modules["RPi"] = mock.Mock()
+    sys.modules["RPi.GPIO"] = mock.Mock()
+
+    frontend = frontend_lib.RaspberryGPIOFrontend(dummy_config, mock.Mock())
+
+    frontend.dispatch_input("next")
+
+
+def test_frontend_handler_dispatch_prev():
+    sys.modules["RPi"] = mock.Mock()
+    sys.modules["RPi.GPIO"] = mock.Mock()
+
+    frontend = frontend_lib.RaspberryGPIOFrontend(dummy_config, mock.Mock())
+
+    frontend.dispatch_input("prev")
+
+
+def test_frontend_handler_dispatch_volume_up():
+    sys.modules["RPi"] = mock.Mock()
+    sys.modules["RPi.GPIO"] = mock.Mock()
+
+    frontend = frontend_lib.RaspberryGPIOFrontend(dummy_config, mock.Mock())
+
+    frontend.dispatch_input("volume_up")
+
+
+def test_frontend_handler_dispatch_volume_down():
+    sys.modules["RPi"] = mock.Mock()
+    sys.modules["RPi.GPIO"] = mock.Mock()
+
+    frontend = frontend_lib.RaspberryGPIOFrontend(dummy_config, mock.Mock())
+
+    frontend.dispatch_input("volume_down")
+
+
+def test_frontend_handler_dispatch_invalid_event():
     sys.modules["RPi"] = mock.Mock()
     sys.modules["RPi.GPIO"] = mock.Mock()
 
@@ -38,3 +85,12 @@ def test_frontend_handler_dispatch():
 
     with pytest.raises(RuntimeError):
         frontend.dispatch_input("tomato")
+
+
+def test_frontend_gpio_event():
+    sys.modules["RPi"] = mock.Mock()
+    sys.modules["RPi.GPIO"] = mock.Mock()
+
+    frontend = frontend_lib.RaspberryGPIOFrontend(dummy_config, mock.Mock())
+
+    frontend.gpio_event(3)
