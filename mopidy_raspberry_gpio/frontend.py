@@ -12,6 +12,7 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
     def __init__(self, config, core):
         super().__init__()
         import RPi.GPIO as GPIO
+
         self.core = core
         self.config = config["raspberry-gpio"]
         self.pin_settings = {}
@@ -30,20 +31,18 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
 
                 pull = GPIO.PUD_UP
                 edge = GPIO.FALLING
-                if settings.active == 'active_high':
+                if settings.active == "active_high":
                     pull = GPIO.PUD_DOWN
                     edge = GPIO.RISING
 
-                GPIO.setup(
-                    pin,
-                    GPIO.IN,
-                    pull_up_down=pull)
+                GPIO.setup(pin, GPIO.IN, pull_up_down=pull)
 
                 GPIO.add_event_detect(
                     pin,
                     edge,
                     callback=self.gpio_event,
-                    bouncetime=settings.bouncetime)
+                    bouncetime=settings.bouncetime,
+                )
 
                 self.pin_settings[pin] = settings
 

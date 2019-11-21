@@ -4,8 +4,7 @@ from mopidy import config
 
 
 class PinConfig(config.ConfigValue):
-    tuple_pinconfig = namedtuple("PinConfig",
-                                 ("event", "active", "bouncetime"))
+    tuple_pinconfig = namedtuple("PinConfig", ("event", "active", "bouncetime"))
 
     valid_events = "play_pause", "prev", "next", "volume_up", "volume_down"
 
@@ -21,7 +20,7 @@ class PinConfig(config.ConfigValue):
         value = config.decode(value).strip()
 
         try:
-            event, active, bouncetime = value.split(',')
+            event, active, bouncetime = value.split(",")
         except ValueError:
             return None
 
@@ -52,5 +51,6 @@ class PinConfig(config.ConfigValue):
         if value is None:
             return ""
         value = "{:s},{:s},{:d}".format(
-            value.event, value.active, value.bouncetime)
+            value.event, value.active, value.bouncetime
+        )
         return config.encode(value)

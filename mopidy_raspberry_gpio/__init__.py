@@ -29,4 +29,5 @@ class Extension(ext.Extension):
 
     def setup(self, registry):
         from .frontend import RaspberryGPIOFrontend
+
         registry.add("frontend", RaspberryGPIOFrontend)

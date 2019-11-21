@@ -19,8 +19,8 @@ dummy_config = {
 
 
 def test_get_frontend_classes():
-    sys.modules['RPi'] = mock.Mock()
-    sys.modules['RPi.GPIO'] = mock.Mock()
+    sys.modules["RPi"] = mock.Mock()
+    sys.modules["RPi.GPIO"] = mock.Mock()
 
     ext = Extension()
     registry = mock.Mock()
@@ -28,14 +28,15 @@ def test_get_frontend_classes():
     ext.setup(registry)
 
     registry.add.assert_called_once_with(
-        'frontend', frontend_lib.RaspberryGPIOFrontend)
+        "frontend", frontend_lib.RaspberryGPIOFrontend
+    )
 
 
 def test_frontend_handler_dispatch():
-    sys.modules['RPi'] = mock.Mock()
-    sys.modules['RPi.GPIO'] = mock.Mock()
+    sys.modules["RPi"] = mock.Mock()
+    sys.modules["RPi.GPIO"] = mock.Mock()
 
     frontend = frontend_lib.RaspberryGPIOFrontend(dummy_config, mock.Mock())
 
     with pytest.raises(RuntimeError):
-        frontend.dispatch_input('tomato')
+        frontend.dispatch_input("tomato")
