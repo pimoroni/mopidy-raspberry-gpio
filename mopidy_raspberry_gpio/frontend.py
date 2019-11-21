@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import logging
 
 from mopidy import core
@@ -12,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
     def __init__(self, config, core):
-        super(RaspberryGPIOFrontend, self).__init__()
+        super().__init__()
         import RPi.GPIO as GPIO
         self.core = core
         self.config = config["raspberry-gpio"]
@@ -54,12 +52,12 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
         self.dispatch_input(settings.event)
 
     def dispatch_input(self, event):
-        handler_name = "handle_{}".format(event)
+        handler_name = f"handle_{event}"
         try:
             getattr(self, handler_name)()
         except AttributeError:
             raise RuntimeError(
-                "Could not find input handler for event: {}".format(event)
+                f"Could not find input handler for event: {event}"
             )
 
     def handle_play_pause(self):

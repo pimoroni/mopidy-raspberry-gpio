@@ -43,7 +43,7 @@ class PinConfig(config.ConfigValue):
             bouncetime = int(bouncetime)
         except ValueError:
             raise ValueError(
-                "invalid bouncetime value for pin config {}".format(bouncetime)
+                f"invalid bouncetime value for pin config {bouncetime}"
             )
 
         return self.tuple_pinconfig(event, active, bouncetime)

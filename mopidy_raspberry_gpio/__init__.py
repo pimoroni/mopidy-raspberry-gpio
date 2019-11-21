@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import logging
 import os
 
@@ -24,9 +22,9 @@ class Extension(ext.Extension):
         return config.read(conf_file)
 
     def get_config_schema(self):
-        schema = super(Extension, self).get_config_schema()
+        schema = super().get_config_schema()
         for pin in range(28):
-            schema["bcm{:d}".format(pin)] = PinConfig()
+            schema[f"bcm{pin:d}"] = PinConfig()
         return schema
 
     def setup(self, registry):
