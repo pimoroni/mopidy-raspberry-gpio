@@ -26,16 +26,12 @@ class PinConfig(config.ConfigValue):
 
         if event not in self.valid_events:
             raise ValueError(
-                "invalid event for pin config {:s} (Must be {})".format(
-                    event, ", ".join(self.valid_events)
-                )
+                f"invalid event for pin config {event} (Must be {', '.join(self.valid_events)})"
             )
 
         if active not in self.valid_modes:
             raise ValueError(
-                "invalid mode for pin config {:s} (Must be {})".format(
-                    event, ", ".join(self.valid_events)
-                )
+                f"invalid event for pin config {active} (Must be {', '.join(self.valid_modes)})"
             )
 
         try:
@@ -50,7 +46,5 @@ class PinConfig(config.ConfigValue):
     def serialize(self, value, display=False):
         if value is None:
             return ""
-        value = "{:s},{:s},{:d}".format(
-            value.event, value.active, value.bouncetime
-        )
+        value = f"{value.event},{value.active},{value.bouncetime}"
         return config.encode(value)
