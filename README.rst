@@ -2,17 +2,17 @@
 Mopidy-Raspberry-GPIO
 ****************************
 
-.. image:: https://img.shields.io/pypi/v/Mopidy-Raspberry-GPIO.svg?style=flat
+.. image:: https://img.shields.io/pypi/v/Mopidy-Raspberry-GPIO.svg
     :target: https://pypi.org/project/Mopidy-Raspberry-GPIO/
     :alt: Latest PyPI version
 
-.. image:: https://img.shields.io/travis/pimoroni/mopidy-raspberry-gpio/master.svg?style=flat
-    :target: https://travis-ci.org/pimoroni/mopidy-raspberry-gpio
-    :alt: Travis CI build status
+.. image:: https://img.shields.io/circleci/build/gh/pimoroni/mopidy-raspberry-gpio
+    :target: https://circleci.com/gh/pimoroni/mopidy-raspberry-gpio
+    :alt: CircleCI build status
 
-.. image:: https://img.shields.io/coveralls/pimoroni/mopidy-raspberry-gpio/master.svg?style=flat
-   :target: https://coveralls.io/r/pimoroni/mopidy-raspberry-gpio
-   :alt: Test coverage
+.. image:: https://img.shields.io/codecov/c/gh/pimoroni/mopidy-raspberry-gpio
+    :target: https://codecov.io/gh/pimoroni/mopidy-raspberry-gpio
+    :alt: Test coverage
 
 Mopidy extension for GPIO input on a Raspberry Pi
 
@@ -22,7 +22,7 @@ Installation
 
 Install by running::
 
-    pip install Mopidy-Raspberry-GPIO
+    python3 -m pip install Mopidy-Raspberry-GPIO
 
 Or, if available, install the Debian/Ubuntu package from `apt.mopidy.com
 <https://apt.mopidy.com/>`_.
