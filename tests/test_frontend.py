@@ -1,6 +1,6 @@
 import sys
+from unittest import mock
 
-import mock
 import pytest
 from mopidy_raspberry_gpio import Extension
 from mopidy_raspberry_gpio import frontend as frontend_lib
