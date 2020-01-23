@@ -13,7 +13,7 @@ dummy_config = {
         # Plugins expect settings to be deserialized
         "bcm1": deserialize("play_pause,active_low,30"),
         "bcm2": deserialize("volume_up,active_high,30"),
-        "bcm3": deserialize("volume_down,active_high,30")
+        "bcm3": deserialize("volume_down,active_high,30"),
     }
 }
 

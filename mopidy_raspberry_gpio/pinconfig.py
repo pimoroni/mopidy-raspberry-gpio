@@ -1,4 +1,3 @@
-
 from collections import namedtuple
 
 from mopidy import config
@@ -15,7 +14,9 @@ class ValidList(list):
 class PinConfig(config.ConfigValue):
     tuple_pinconfig = namedtuple("PinConfig", ("event", "active", "bouncetime"))
 
-    valid_events = ValidList(["play_pause", "prev", "next", "volume_up", "volume_down"])
+    valid_events = ValidList(
+        ["play_pause", "prev", "next", "volume_up", "volume_down"]
+    )
 
     valid_modes = ValidList(["active_low", "active_high"])
 
