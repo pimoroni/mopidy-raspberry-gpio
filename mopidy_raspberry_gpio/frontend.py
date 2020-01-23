@@ -58,7 +58,7 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
             )
 
     def handle_play_pause(self):
-        if self.core.playback.state.get() == core.PlaybackState.PLAYING:
+        if self.core.playback.get_state().get() == core.PlaybackState.PLAYING:
             self.core.playback.pause()
         else:
             self.core.playback.play()
@@ -70,13 +70,13 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
         self.core.playback.previous()
 
     def handle_volume_up(self):
-        volume = self.core.playback.volume.get()
+        volume = self.core.mixer.get_volume().get()
         volume += 5
         volume = min(volume, 100)
-        self.core.playback.volume = volume
+        self.core.mixer.set_volume(volume)
 
     def handle_volume_down(self):
-        volume = self.core.playback.volume.get()
+        volume = self.core.mixer.get_volume().get()
         volume -= 5
         volume = max(volume, 0)
-        self.core.playback.volume = volume
+        self.core.mixer.set_volume(volume)
