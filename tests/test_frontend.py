@@ -27,11 +27,7 @@ def dummy_mopidy_core():
     mixer = dummy_mixer.create_proxy()
     audio = dummy_audio.create_proxy()
     backend = dummy_backend.create_proxy(audio=audio)
-    return core.Core.start(
-        audio=audio,
-        mixer=mixer,
-        backends=[backend]
-    ).proxy()
+    return core.Core.start(audio=audio, mixer=mixer, backends=[backend]).proxy()
 
 
 def test_get_frontend_classes():
@@ -52,7 +48,9 @@ def test_frontend_handler_dispatch_play_pause():
     sys.modules["RPi"] = mock.Mock()
     sys.modules["RPi.GPIO"] = mock.Mock()
 
-    frontend = frontend_lib.RaspberryGPIOFrontend(dummy_config, dummy_mopidy_core())
+    frontend = frontend_lib.RaspberryGPIOFrontend(
+        dummy_config, dummy_mopidy_core()
+    )
 
     frontend.dispatch_input("play_pause")
 
@@ -61,7 +59,9 @@ def test_frontend_handler_dispatch_next():
     sys.modules["RPi"] = mock.Mock()
     sys.modules["RPi.GPIO"] = mock.Mock()
 
-    frontend = frontend_lib.RaspberryGPIOFrontend(dummy_config, dummy_mopidy_core())
+    frontend = frontend_lib.RaspberryGPIOFrontend(
+        dummy_config, dummy_mopidy_core()
+    )
 
     frontend.dispatch_input("next")
 
@@ -70,7 +70,9 @@ def test_frontend_handler_dispatch_prev():
     sys.modules["RPi"] = mock.Mock()
     sys.modules["RPi.GPIO"] = mock.Mock()
 
-    frontend = frontend_lib.RaspberryGPIOFrontend(dummy_config, dummy_mopidy_core())
+    frontend = frontend_lib.RaspberryGPIOFrontend(
+        dummy_config, dummy_mopidy_core()
+    )
 
     frontend.dispatch_input("prev")
 
@@ -79,7 +81,9 @@ def test_frontend_handler_dispatch_volume_up():
     sys.modules["RPi"] = mock.Mock()
     sys.modules["RPi.GPIO"] = mock.Mock()
 
-    frontend = frontend_lib.RaspberryGPIOFrontend(dummy_config, dummy_mopidy_core())
+    frontend = frontend_lib.RaspberryGPIOFrontend(
+        dummy_config, dummy_mopidy_core()
+    )
 
     frontend.dispatch_input("volume_up")
 
@@ -88,7 +92,9 @@ def test_frontend_handler_dispatch_volume_down():
     sys.modules["RPi"] = mock.Mock()
     sys.modules["RPi.GPIO"] = mock.Mock()
 
-    frontend = frontend_lib.RaspberryGPIOFrontend(dummy_config, dummy_mopidy_core())
+    frontend = frontend_lib.RaspberryGPIOFrontend(
+        dummy_config, dummy_mopidy_core()
+    )
 
     frontend.dispatch_input("volume_down")
 
@@ -97,7 +103,9 @@ def test_frontend_handler_dispatch_invalid_event():
     sys.modules["RPi"] = mock.Mock()
     sys.modules["RPi.GPIO"] = mock.Mock()
 
-    frontend = frontend_lib.RaspberryGPIOFrontend(dummy_config, dummy_mopidy_core())
+    frontend = frontend_lib.RaspberryGPIOFrontend(
+        dummy_config, dummy_mopidy_core()
+    )
 
     with pytest.raises(RuntimeError):
         frontend.dispatch_input("tomato")
@@ -107,6 +115,8 @@ def test_frontend_gpio_event():
     sys.modules["RPi"] = mock.Mock()
     sys.modules["RPi.GPIO"] = mock.Mock()
 
-    frontend = frontend_lib.RaspberryGPIOFrontend(dummy_config, dummy_mopidy_core())
+    frontend = frontend_lib.RaspberryGPIOFrontend(
+        dummy_config, dummy_mopidy_core()
+    )
 
     frontend.gpio_event(3)

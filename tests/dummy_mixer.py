@@ -10,8 +10,9 @@ def create_proxy(config=None):
 class DummyMixer(pykka.ThreadingActor, mixer.Mixer):
     def __init__(self, config):
         super().__init__()
-        self._volume = 50   # Had to be initialised to avoid none type error in tests
-        self._mute = False  # Ditto
+        # These must be initialised to avoid none type error in tests
+        self._volume = 50
+        self._mute = False
 
     def get_volume(self):
         return self._volume
