@@ -49,3 +49,4 @@ jobs:
   check-manifest: *test-template
 
   flake8: *test-template
+  
