@@ -1,15 +1,15 @@
 import sys
 from unittest import mock
 
+import pykka
+from mopidy import core
+
 import pytest
 from mopidy_raspberry_gpio import Extension
 from mopidy_raspberry_gpio import frontend as frontend_lib
 from mopidy_raspberry_gpio import pinconfig
 
-from mopidy import core
-from . import dummy_mixer
-from . import dummy_backend
-from . import dummy_audio
+from . import dummy_audio, dummy_backend, dummy_mixer
 
 deserialize = pinconfig.PinConfig().deserialize
 
@@ -21,6 +21,10 @@ dummy_config = {
         "bcm3": deserialize("volume_down,active_high,30"),
     }
 }
+
+
+def stop_mopidy_core():
+    pykka.ActorRegistry.stop_all()
 
 
 def dummy_mopidy_core():
@@ -43,6 +47,8 @@ def test_get_frontend_classes():
         "frontend", frontend_lib.RaspberryGPIOFrontend
     )
 
+    stop_mopidy_core()
+
 
 def test_frontend_handler_dispatch_play_pause():
     sys.modules["RPi"] = mock.Mock()
@@ -53,6 +59,8 @@ def test_frontend_handler_dispatch_play_pause():
     )
 
     frontend.dispatch_input("play_pause")
+
+    stop_mopidy_core()
 
 
 def test_frontend_handler_dispatch_next():
@@ -65,6 +73,8 @@ def test_frontend_handler_dispatch_next():
 
     frontend.dispatch_input("next")
 
+    stop_mopidy_core()
+
 
 def test_frontend_handler_dispatch_prev():
     sys.modules["RPi"] = mock.Mock()
@@ -75,6 +85,8 @@ def test_frontend_handler_dispatch_prev():
     )
 
     frontend.dispatch_input("prev")
+
+    stop_mopidy_core()
 
 
 def test_frontend_handler_dispatch_volume_up():
@@ -87,6 +99,8 @@ def test_frontend_handler_dispatch_volume_up():
 
     frontend.dispatch_input("volume_up")
 
+    stop_mopidy_core()
+
 
 def test_frontend_handler_dispatch_volume_down():
     sys.modules["RPi"] = mock.Mock()
@@ -97,6 +111,8 @@ def test_frontend_handler_dispatch_volume_down():
     )
 
     frontend.dispatch_input("volume_down")
+
+    stop_mopidy_core()
 
 
 def test_frontend_handler_dispatch_invalid_event():
@@ -110,6 +126,8 @@ def test_frontend_handler_dispatch_invalid_event():
     with pytest.raises(RuntimeError):
         frontend.dispatch_input("tomato")
 
+    stop_mopidy_core()
+
 
 def test_frontend_gpio_event():
     sys.modules["RPi"] = mock.Mock()
@@ -120,3 +138,5 @@ def test_frontend_gpio_event():
     )
 
     frontend.gpio_event(3)
+
+    stop_mopidy_core()
