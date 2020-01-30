@@ -1,7 +1,5 @@
-from __future__ import unicode_literals
-
 import logging
-import os
+import pathlib
 
 from mopidy import config, ext
 
@@ -20,15 +18,15 @@ class Extension(ext.Extension):
     version = __version__
 
     def get_default_config(self):
-        conf_file = os.path.join(os.path.dirname(__file__), "ext.conf")
-        return config.read(conf_file)
+        return config.read(pathlib.Path(__file__).parent / "ext.conf")
 
     def get_config_schema(self):
-        schema = super(Extension, self).get_config_schema()
+        schema = super().get_config_schema()
         for pin in range(28):
-            schema["bcm{:d}".format(pin)] = PinConfig()
+            schema[f"bcm{pin:d}"] = PinConfig()
         return schema
 
     def setup(self, registry):
         from .frontend import RaspberryGPIOFrontend
+
         registry.add("frontend", RaspberryGPIOFrontend)

@@ -1,7 +1,4 @@
-from __future__ import unicode_literals
-
 import pytest
-
 from mopidy_raspberry_gpio import Extension, PinConfig
 
 

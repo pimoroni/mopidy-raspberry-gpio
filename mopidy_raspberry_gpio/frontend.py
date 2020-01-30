@@ -1,19 +1,16 @@
-from __future__ import unicode_literals
-
 import logging
 
-from mopidy import core
-
 import pykka
-
+from mopidy import core
 
 logger = logging.getLogger(__name__)
 
 
 class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
     def __init__(self, config, core):
-        super(RaspberryGPIOFrontend, self).__init__()
+        super().__init__()
         import RPi.GPIO as GPIO
+
         self.core = core
         self.config = config["raspberry-gpio"]
         self.pin_settings = {}
@@ -32,20 +29,18 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
 
                 pull = GPIO.PUD_UP
                 edge = GPIO.FALLING
-                if settings.active == 'active_high':
+                if settings.active == "active_high":
                     pull = GPIO.PUD_DOWN
                     edge = GPIO.RISING
 
-                GPIO.setup(
-                    pin,
-                    GPIO.IN,
-                    pull_up_down=pull)
+                GPIO.setup(pin, GPIO.IN, pull_up_down=pull)
 
                 GPIO.add_event_detect(
                     pin,
                     edge,
                     callback=self.gpio_event,
-                    bouncetime=settings.bouncetime)
+                    bouncetime=settings.bouncetime,
+                )
 
                 self.pin_settings[pin] = settings
 
@@ -54,16 +49,16 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
         self.dispatch_input(settings.event)
 
     def dispatch_input(self, event):
-        handler_name = "handle_{}".format(event)
+        handler_name = f"handle_{event}"
         try:
             getattr(self, handler_name)()
         except AttributeError:
             raise RuntimeError(
-                "Could not find input handler for event: {}".format(event)
+                f"Could not find input handler for event: {event}"
             )
 
     def handle_play_pause(self):
-        if self.core.playback.state.get() == core.PlaybackState.PLAYING:
+        if self.core.playback.get_state().get() == core.PlaybackState.PLAYING:
             self.core.playback.pause()
         else:
             self.core.playback.play()
@@ -75,13 +70,13 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
         self.core.playback.previous()
 
     def handle_volume_up(self):
-        volume = self.core.playback.volume.get()
+        volume = self.core.mixer.get_volume().get()
         volume += 5
         volume = min(volume, 100)
-        self.core.playback.volume = volume
+        self.core.mixer.set_volume(volume)
 
     def handle_volume_down(self):
-        volume = self.core.playback.volume.get()
+        volume = self.core.mixer.get_volume().get()
         volume -= 5
         volume = max(volume, 0)
-        self.core.playback.volume = volume
+        self.core.mixer.set_volume(volume)
