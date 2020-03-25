@@ -76,4 +76,4 @@ def test_pinconfig_serialize():
     schema = ext.get_config_schema()
 
     bcm1 = schema["bcm1"].deserialize("volume_up,active_low,30,steps=1")
-    assert bcm1.serialize() == "volume_up,active_low,30,steps=1"
+    assert schema["bcm1"].serialize(bcm1) == "volume_up,active_low,30,steps=1"
