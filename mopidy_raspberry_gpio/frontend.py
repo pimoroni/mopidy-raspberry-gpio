@@ -51,7 +51,7 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
     def dispatch_input(self, settings):
         handler_name = f"handle_{settings.event}"
         try:
-            getattr(self, handler_name)(settings.config)
+            getattr(self, handler_name)(settings.options)
         except AttributeError:
             raise RuntimeError(
                 f"Could not find input handler for event: {settings.event}"
