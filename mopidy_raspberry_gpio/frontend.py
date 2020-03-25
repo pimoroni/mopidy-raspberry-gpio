@@ -46,37 +46,39 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
 
     def gpio_event(self, pin):
         settings = self.pin_settings[pin]
-        self.dispatch_input(settings.event)
+        self.dispatch_input(settings)
 
-    def dispatch_input(self, event):
-        handler_name = f"handle_{event}"
+    def dispatch_input(self, settings):
+        handler_name = f"handle_{settings.event}"
         try:
-            getattr(self, handler_name)()
+            getattr(self, handler_name)(settings.config)
         except AttributeError:
             raise RuntimeError(
-                f"Could not find input handler for event: {event}"
+                f"Could not find input handler for event: {settings.event}"
             )
 
-    def handle_play_pause(self):
+    def handle_play_pause(self, config):
         if self.core.playback.get_state().get() == core.PlaybackState.PLAYING:
             self.core.playback.pause()
         else:
             self.core.playback.play()
 
-    def handle_next(self):
+    def handle_next(self, config):
         self.core.playback.next()
 
-    def handle_prev(self):
+    def handle_prev(self, config):
         self.core.playback.previous()
 
-    def handle_volume_up(self):
+    def handle_volume_up(self, config):
+        step = int(config.get("step", 5))
         volume = self.core.mixer.get_volume().get()
-        volume += 5
+        volume += step
         volume = min(volume, 100)
         self.core.mixer.set_volume(volume)
 
-    def handle_volume_down(self):
+    def handle_volume_down(self, config):
+        step = int(config.get("step", 5))
         volume = self.core.mixer.get_volume().get()
-        volume -= 5
+        volume -= step
         volume = max(volume, 0)
         self.core.mixer.set_volume(volume)
