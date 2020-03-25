@@ -58,6 +58,17 @@ Supported modes:
 - active_low - configures the pin with a pull-up and triggers when it reads 0/low (RECOMMENDED)
 - active_high - configures the pin as a pull-down and triggers when it reads 1/high
 
+Events volume_up and volume_down both support an (optional) "step" option, which controls the amount (in percent) that the volume is adjusted with each button press.
+
+Eg::
+
+    [raspberry-gpio]
+    enabled = true
+    bcm5 = play_pause,active_low,250
+    bcm6 = volume_down,active_low,250,step=1
+    bcm16 = next,active_low,250
+    bcm20 = volume_up,active_low,250,step=1
+
 
 Project resources
 =================

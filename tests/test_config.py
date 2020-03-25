@@ -59,3 +59,21 @@ def test_pinconfig_invalid_bouncetime_raises_valueerror():
     with pytest.raises(ValueError):
         bcm1 = schema["bcm1"].deserialize("play_pause,active_low,tomato")
         del bcm1
+
+
+def test_pinconfig_additional_options():
+    ext = Extension()
+
+    schema = ext.get_config_schema()
+
+    bcm1 = schema["bcm1"].deserialize("volume_up,active_low,30,steps=1")
+    del bcm1
+
+
+def test_pinconfig_serialize():
+    ext = Extension()
+
+    schema = ext.get_config_schema()
+
+    bcm1 = schema["bcm1"].deserialize("volume_up,active_low,30,steps=1")
+    assert schema["bcm1"].serialize(bcm1) == "volume_up,active_low,30,steps=1"
