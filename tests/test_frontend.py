@@ -4,7 +4,6 @@ from unittest import mock
 import pykka
 from mopidy import core
 
-import pytest
 from mopidy_raspberry_gpio import Extension
 from mopidy_raspberry_gpio import frontend as frontend_lib
 from mopidy_raspberry_gpio import pinconfig
@@ -58,7 +57,11 @@ def test_frontend_handler_dispatch_play_pause():
         dummy_config, dummy_mopidy_core()
     )
 
-    frontend.dispatch_input("play_pause")
+    ext = Extension()
+    schema = ext.get_config_schema()
+    settings = schema["bcm1"].deserialize("play_pause,active_low,30")
+
+    frontend.dispatch_input(settings)
 
     stop_mopidy_core()
 
@@ -71,7 +74,11 @@ def test_frontend_handler_dispatch_next():
         dummy_config, dummy_mopidy_core()
     )
 
-    frontend.dispatch_input("next")
+    ext = Extension()
+    schema = ext.get_config_schema()
+    settings = schema["bcm1"].deserialize("next,active_low,30")
+
+    frontend.dispatch_input(settings)
 
     stop_mopidy_core()
 
@@ -84,7 +91,11 @@ def test_frontend_handler_dispatch_prev():
         dummy_config, dummy_mopidy_core()
     )
 
-    frontend.dispatch_input("prev")
+    ext = Extension()
+    schema = ext.get_config_schema()
+    settings = schema["bcm1"].deserialize("prev,active_low,30")
+
+    frontend.dispatch_input(settings)
 
     stop_mopidy_core()
 
@@ -97,7 +108,11 @@ def test_frontend_handler_dispatch_volume_up():
         dummy_config, dummy_mopidy_core()
     )
 
-    frontend.dispatch_input("volume_up")
+    ext = Extension()
+    schema = ext.get_config_schema()
+    settings = schema["bcm1"].deserialize("volume_up,active_low,30")
+
+    frontend.dispatch_input(settings)
 
     stop_mopidy_core()
 
@@ -110,12 +125,16 @@ def test_frontend_handler_dispatch_volume_down():
         dummy_config, dummy_mopidy_core()
     )
 
-    frontend.dispatch_input("volume_down")
+    ext = Extension()
+    schema = ext.get_config_schema()
+    settings = schema["bcm1"].deserialize("volume_down,active_low,30")
+
+    frontend.dispatch_input(settings)
 
     stop_mopidy_core()
 
 
-def test_frontend_handler_dispatch_invalid_event():
+def test_frontend_handler_dispatch_volume_up_custom_step():
     sys.modules["RPi"] = mock.Mock()
     sys.modules["RPi.GPIO"] = mock.Mock()
 
@@ -123,8 +142,28 @@ def test_frontend_handler_dispatch_invalid_event():
         dummy_config, dummy_mopidy_core()
     )
 
-    with pytest.raises(RuntimeError):
-        frontend.dispatch_input("tomato")
+    ext = Extension()
+    schema = ext.get_config_schema()
+    settings = schema["bcm1"].deserialize("volume_up,active_low,30,step=1")
+
+    frontend.dispatch_input(settings)
+
+    stop_mopidy_core()
+
+
+def test_frontend_handler_dispatch_volume_down_custom_step():
+    sys.modules["RPi"] = mock.Mock()
+    sys.modules["RPi.GPIO"] = mock.Mock()
+
+    frontend = frontend_lib.RaspberryGPIOFrontend(
+        dummy_config, dummy_mopidy_core()
+    )
+
+    ext = Extension()
+    schema = ext.get_config_schema()
+    settings = schema["bcm1"].deserialize("volume_down,active_low,30,step=1")
+
+    frontend.dispatch_input(settings)
 
     stop_mopidy_core()
 
