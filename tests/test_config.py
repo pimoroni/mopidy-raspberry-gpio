@@ -8,7 +8,7 @@ def test_get_default_config():
     config = ext.get_default_config()
 
     assert "[raspberry-gpio]" in config
-    assert "enabled = true" in config
+    assert "enabled = false" in config
 
 
 def test_get_config_schema():
