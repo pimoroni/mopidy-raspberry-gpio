@@ -62,7 +62,7 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
             self.core.playback.pause()
         else:
             self.core.playback.play()
-            
+
     def handle_play_stop(self, config):
         if self.core.playback.get_state().get() == core.PlaybackState.PLAYING:
             self.core.playback.stop()
