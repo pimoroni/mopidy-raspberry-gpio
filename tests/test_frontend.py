@@ -66,6 +66,23 @@ def test_frontend_handler_dispatch_play_pause():
     stop_mopidy_core()
 
 
+def test_frontend_handler_dispatch_play_stop():
+    sys.modules["RPi"] = mock.Mock()
+    sys.modules["RPi.GPIO"] = mock.Mock()
+
+    frontend = frontend_lib.RaspberryGPIOFrontend(
+        dummy_config, dummy_mopidy_core()
+    )
+
+    ext = Extension()
+    schema = ext.get_config_schema()
+    settings = schema["bcm1"].deserialize("play_stop,active_low,30")
+
+    frontend.dispatch_input(settings)
+
+    stop_mopidy_core()
+
+
 def test_frontend_handler_dispatch_next():
     sys.modules["RPi"] = mock.Mock()
     sys.modules["RPi.GPIO"] = mock.Mock()
