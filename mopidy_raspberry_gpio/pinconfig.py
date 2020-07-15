@@ -17,7 +17,7 @@ class PinConfig(config.ConfigValue):
     )
 
     valid_events = ValidList(
-        ["play_pause", "prev", "next", "volume_up", "volume_down"]
+        ["play_pause", "play_stop", "prev", "next", "volume_up", "volume_down"]
     )
 
     valid_modes = ValidList(["active_low", "active_high"])
