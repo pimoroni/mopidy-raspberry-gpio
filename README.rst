@@ -20,6 +20,10 @@ Mopidy extension for GPIO input on a Raspberry Pi
 Installation
 ============
 
+Ensure Mopidy has access to GPIO::
+
+    sudo usermod -a -G gpio mopidy
+
 Install by running::
 
     python3 -m pip install Mopidy-Raspberry-GPIO
