@@ -61,7 +61,7 @@ def test_frontend_handler_dispatch_play_pause():
     schema = ext.get_config_schema()
     settings = schema["bcm1"].deserialize("play_pause,active_low,30")
 
-    frontend.dispatch_input(settings)
+    frontend.dispatch_input(settings.event, settings.options)
 
     stop_mopidy_core()
 
@@ -78,7 +78,7 @@ def test_frontend_handler_dispatch_play_stop():
     schema = ext.get_config_schema()
     settings = schema["bcm1"].deserialize("play_stop,active_low,30")
 
-    frontend.dispatch_input(settings)
+    frontend.dispatch_input(settings.event, settings.options)
 
     stop_mopidy_core()
 
@@ -95,7 +95,7 @@ def test_frontend_handler_dispatch_next():
     schema = ext.get_config_schema()
     settings = schema["bcm1"].deserialize("next,active_low,30")
 
-    frontend.dispatch_input(settings)
+    frontend.dispatch_input(settings.event, settings.options)
 
     stop_mopidy_core()
 
@@ -112,7 +112,7 @@ def test_frontend_handler_dispatch_prev():
     schema = ext.get_config_schema()
     settings = schema["bcm1"].deserialize("prev,active_low,30")
 
-    frontend.dispatch_input(settings)
+    frontend.dispatch_input(settings.event, settings.options)
 
     stop_mopidy_core()
 
@@ -129,7 +129,7 @@ def test_frontend_handler_dispatch_volume_up():
     schema = ext.get_config_schema()
     settings = schema["bcm1"].deserialize("volume_up,active_low,30")
 
-    frontend.dispatch_input(settings)
+    frontend.dispatch_input(settings.event, settings.options)
 
     stop_mopidy_core()
 
@@ -146,7 +146,7 @@ def test_frontend_handler_dispatch_volume_down():
     schema = ext.get_config_schema()
     settings = schema["bcm1"].deserialize("volume_down,active_low,30")
 
-    frontend.dispatch_input(settings)
+    frontend.dispatch_input(settings.event, settings.options)
 
     stop_mopidy_core()
 
@@ -163,7 +163,7 @@ def test_frontend_handler_dispatch_volume_up_custom_step():
     schema = ext.get_config_schema()
     settings = schema["bcm1"].deserialize("volume_up,active_low,30,step=1")
 
-    frontend.dispatch_input(settings)
+    frontend.dispatch_input(settings.event, settings.options)
 
     stop_mopidy_core()
 
@@ -180,7 +180,7 @@ def test_frontend_handler_dispatch_volume_down_custom_step():
     schema = ext.get_config_schema()
     settings = schema["bcm1"].deserialize("volume_down,active_low,30,step=1")
 
-    frontend.dispatch_input(settings)
+    frontend.dispatch_input(settings.event, settings.options)
 
     stop_mopidy_core()
 

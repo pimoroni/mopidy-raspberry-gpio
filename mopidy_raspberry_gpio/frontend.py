@@ -5,7 +5,6 @@ from mopidy import core
 
 logger = logging.getLogger(__name__)
 
-
 class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
     def __init__(self, config, core):
         super().__init__()
@@ -14,6 +13,7 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
         self.core = core
         self.config = config["raspberry-gpio"]
         self.pin_settings = {}
+        self.rot_encoders = {}
 
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
@@ -27,11 +27,24 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
                 if settings is None:
                     continue
 
+
                 pull = GPIO.PUD_UP
                 edge = GPIO.FALLING
                 if settings.active == "active_high":
                     pull = GPIO.PUD_DOWN
                     edge = GPIO.RISING
+
+                if 'rotenc_id' in settings.options:
+                    edge = GPIO.BOTH
+                    rotenc_id = self.options['rotenc_id']
+                    encoder = None
+                    if rotenc_id in self.rot_encoders:
+                        encoder = self.rot_encoders[rotenc_id]
+                    else:
+                        encoder = RotEncoder(rotenc_id)
+                        self.rot_encoders[rotenc_id] = encoder
+                    encoder.add_pin(pin, settings.event)
+                    settings.rot_encoder = encoder
 
                 GPIO.setup(pin, GPIO.IN, pull_up_down=pull)
 
@@ -44,17 +57,24 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
 
                 self.pin_settings[pin] = settings
 
+        # TODO validate all self.rot_encoders have two pins
+
     def gpio_event(self, pin):
         settings = self.pin_settings[pin]
-        self.dispatch_input(settings)
+        event = settings.event
+        if settings.rot_encoder:
+            event = settings.rot_encoder.get_event()
 
-    def dispatch_input(self, settings):
-        handler_name = f"handle_{settings.event}"
+        if event:
+            self.dispatch_input(event, settings.options)
+
+    def dispatch_input(self, event, options):
+        handler_name = f"handle_{event}"
         try:
-            getattr(self, handler_name)(settings.options)
+            getattr(self, handler_name)(options)
         except AttributeError:
             raise RuntimeError(
-                f"Could not find input handler for event: {settings.event}"
+                f"Could not find input handler for event: {event}"
             )
 
     def handle_play_pause(self, config):
