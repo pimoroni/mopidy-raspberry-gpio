@@ -7,6 +7,7 @@ class RotEncoder:
         self.id = rot_id
         self.pins = []
         self.events = []
+        self.state = (None, None)
         self.state_map = {
                 ((False, False), (False,True)): 0,
                 ((False, False), (True,False)): 1,

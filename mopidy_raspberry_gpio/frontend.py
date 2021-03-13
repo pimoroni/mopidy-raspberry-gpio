@@ -3,6 +3,8 @@ import logging
 import pykka
 from mopidy import core
 
+from .rotencoder import RotEncoder
+
 logger = logging.getLogger(__name__)
 
 class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
@@ -27,7 +29,6 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
                 if settings is None:
                     continue
 
-
                 pull = GPIO.PUD_UP
                 edge = GPIO.FALLING
                 if settings.active == "active_high":
@@ -36,15 +37,14 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
 
                 if 'rotenc_id' in settings.options:
                     edge = GPIO.BOTH
-                    rotenc_id = self.options['rotenc_id']
+                    rotenc_id = settings.options['rotenc_id']
                     encoder = None
-                    if rotenc_id in self.rot_encoders:
+                    if rotenc_id in self.rot_encoders.keys():
                         encoder = self.rot_encoders[rotenc_id]
                     else:
                         encoder = RotEncoder(rotenc_id)
                         self.rot_encoders[rotenc_id] = encoder
                     encoder.add_pin(pin, settings.event)
-                    settings.rot_encoder = encoder
 
                 GPIO.setup(pin, GPIO.IN, pull_up_down=pull)
 
@@ -59,11 +59,17 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
 
         # TODO validate all self.rot_encoders have two pins
 
+    def find_pin_rotenc(self, pin):
+        for encoder in self.rot_encoders.values():
+            if pin in encoder.pins:
+                return encoder
+
     def gpio_event(self, pin):
         settings = self.pin_settings[pin]
         event = settings.event
-        if settings.rot_encoder:
-            event = settings.rot_encoder.get_event()
+        encoder = self.find_pin_rotenc (pin)
+        if encoder:
+            event = encoder.get_event()
 
         if event:
             self.dispatch_input(event, settings.options)

@@ -18,6 +18,8 @@ dummy_config = {
         "bcm1": deserialize("play_pause,active_low,30"),
         "bcm2": deserialize("volume_up,active_high,30"),
         "bcm3": deserialize("volume_down,active_high,30"),
+        "bcm4": deserialize("volume_down,active_high,250,rotenc_id=vol"),
+        "bcm5": deserialize("volume_up,active_high,250,rotenc_id=vol"),
     }
 }
 
@@ -194,5 +196,33 @@ def test_frontend_gpio_event():
     )
 
     frontend.gpio_event(3)
+
+    stop_mopidy_core()
+
+
+@mock.patch("RPi.GPIO.input")
+def test_frontend_rot_encoder_event(patched_input):
+    patched_input.return_value = False
+
+    frontend = frontend_lib.RaspberryGPIOFrontend(
+        dummy_config, dummy_mopidy_core()
+    )
+
+    # Check that transition (False, True) -> (False, False) triggers volume_up
+    encoder = frontend.rot_encoders["vol"]
+    encoder.state = (False, True)
+
+    dispatch_input = mock.Mock()
+    frontend.dispatch_input = dispatch_input
+
+    frontend.gpio_event(4)
+    assert (dispatch_input.call_args[0][0] == "volume_up")
+    assert (encoder.state == (False, False))
+
+    # Check that we do not submit an event for the invalid transition
+    # (False, False) -> (False, False)
+    dispatch_input.reset_mock()
+    frontend.gpio_event(4)
+    dispatch_input.assert_not_called()
 
     stop_mopidy_core()

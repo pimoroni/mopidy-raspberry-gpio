@@ -13,7 +13,7 @@ class ValidList(list):
 
 class PinConfig(config.ConfigValue):
     tuple_pinconfig = namedtuple(
-        "PinConfig", ("event", "active", "bouncetime", "options", "rot_encoder")
+        "PinConfig", ("event", "active", "bouncetime", "options")
     )
 
     valid_events = ValidList(
@@ -62,7 +62,7 @@ class PinConfig(config.ConfigValue):
             key, value = option.split("=")
             options[key] = value
 
-        return self.tuple_pinconfig(event, active, bouncetime, options, None)
+        return self.tuple_pinconfig(event, active, bouncetime, options)
 
     def serialize(self, value, display=False):
         if value is None:

@@ -5,14 +5,6 @@ import unittest
 from mopidy_raspberry_gpio import RotEncoder
 from unittest.mock import patch, MagicMock
 
-MockRPi = MagicMock()
-modules = {
-    "RPi": MockRPi,
-    "RPi.GPIO": MockRPi.GPIO
-}
-patcher = patch.dict("sys.modules", modules)
-patcher.start()
-
 class RotEncoderTests(unittest.TestCase):
 
     def test_rotenc_init(self):
@@ -35,7 +27,7 @@ class RotEncoderTests(unittest.TestCase):
         rot_enc = RotEncoder("vol")
         rot_enc.add_pin(123, "vol_up")
         rot_enc.add_pin(124, "vol_down")
-        
+
         with self.assertRaises(RuntimeError) as cm:
             rot_enc.add_pin(124, "vol_down")
 
