@@ -4,7 +4,6 @@ import pathlib
 from mopidy import config, ext
 
 from .pinconfig import PinConfig
-from .rotencoder import RotEncoder
 
 __version__ = "0.0.2"
 

@@ -216,8 +216,8 @@ def test_frontend_rot_encoder_event(patched_input):
     frontend.dispatch_input = dispatch_input
 
     frontend.gpio_event(4)
-    assert (dispatch_input.call_args[0][0] == "volume_up")
-    assert (encoder.state == (False, False))
+    assert dispatch_input.call_args[0][0] == "volume_up"
+    assert encoder.state == (False, False)
 
     # Check that we do not submit an event for the invalid transition
     # (False, False) -> (False, False)

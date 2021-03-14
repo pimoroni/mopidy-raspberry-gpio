@@ -7,6 +7,7 @@ from .rotencoder import RotEncoder
 
 logger = logging.getLogger(__name__)
 
+
 class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
     def __init__(self, config, core):
         super().__init__()
@@ -35,9 +36,9 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
                     pull = GPIO.PUD_DOWN
                     edge = GPIO.RISING
 
-                if 'rotenc_id' in settings.options:
+                if "rotenc_id" in settings.options:
                     edge = GPIO.BOTH
-                    rotenc_id = settings.options['rotenc_id']
+                    rotenc_id = settings.options["rotenc_id"]
                     encoder = None
                     if rotenc_id in self.rot_encoders.keys():
                         encoder = self.rot_encoders[rotenc_id]
@@ -67,7 +68,7 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
     def gpio_event(self, pin):
         settings = self.pin_settings[pin]
         event = settings.event
-        encoder = self.find_pin_rotenc (pin)
+        encoder = self.find_pin_rotenc(pin)
         if encoder:
             event = encoder.get_event()
 
