@@ -1,7 +1,7 @@
 import unittest
 
 from unittest.mock import patch
-from mopidy_raspberry_gpio import RotEncoder
+from mopidy_raspberry_gpio.rotencoder import RotEncoder
 
 
 class RotEncoderTests(unittest.TestCase):
