@@ -23,6 +23,10 @@ Installation
 Ensure Mopidy has access to GPIO::
 
     sudo usermod -a -G gpio mopidy
+    
+Make sure you have the RPi.GPIO library installed::
+
+    sudo apt install python3-rpi.gpio
 
 Install by running::
 
