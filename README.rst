@@ -45,9 +45,10 @@ Mopidy-Raspberry-GPIO to your Mopidy configuration file::
     [raspberry-gpio]
     enabled = true
     bcm5 = play_pause,active_low,250
-    bcm6 = volume_down,active_low,250
+    bcm6 = prev,active_low,250
     bcm16 = next,active_low,250
-    bcm20 = volume_up,active_low,250
+    bcm21 = volume_down,active_low,10,rotenc_id=vol,step=1
+    bcm20 = volume_up,active_low,10,rotenc_id=vol,step=1
 
 Each bcmN entry corresponds to the BCM pin of that number.
 
