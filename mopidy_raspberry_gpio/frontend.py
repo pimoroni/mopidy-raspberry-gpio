@@ -47,19 +47,26 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
                         self.rot_encoders[rotenc_id] = encoder
                     encoder.add_pin(pin, settings.event)
 
-                try:
-                    GPIO.setup(pin, GPIO.IN, pull_up_down=pull)
-
-                    GPIO.add_event_detect(
-                        pin,
-                        edge,
-                        callback=self.gpio_event,
-                        bouncetime=settings.bouncetime,
-                    )
-
-                    self.pin_settings[pin] = settings
-                except:
-                    logger.error(f"GPIO setup failed for pin {key}")
+                GPIO.setup(pin, GPIO.IN, pull_up_down=pull)
+                attempt = 0
+                while True:
+                    try:
+                        GPIO.add_event_detect(
+                            pin,
+                            edge,
+                            callback=self.gpio_event,
+                            bouncetime=settings.bouncetime,
+                        )
+                        self.pin_settings[pin] = settings
+                        break
+                    
+                    except:
+                        attempt += 1
+                        if attempt <= 5:
+                            logger.warning(f"GPIO setup retry #{attempt} for pin {key}")
+                        else:
+                            logger.error(f"GPIO setup failed for pin {key}")
+                            break
 
         # TODO validate all self.rot_encoders have two pins
 
