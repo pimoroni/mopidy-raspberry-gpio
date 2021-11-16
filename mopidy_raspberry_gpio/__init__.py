@@ -5,7 +5,7 @@ from mopidy import config, ext
 
 from .pinconfig import PinConfig
 
-__version__ = "1.0.3"
+__version__ = "1.0.4"
 
 
 logger = logging.getLogger(__name__)
