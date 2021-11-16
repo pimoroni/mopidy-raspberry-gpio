@@ -2,6 +2,12 @@
 Changelog
 *********
 
+v1.0.3
+========================================
+
+- Add rotary encoder support
+- Drop defaults from ext.conf
+
 v1.0.2
 ========================================
 
