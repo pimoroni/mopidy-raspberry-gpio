@@ -48,9 +48,9 @@ Mopidy-Raspberry-GPIO to your Mopidy configuration file::
     bcm6 = prev,active_low,250
     bcm16 = next,active_low,250
     bcm21 = volume_down,active_low,10,rotenc_id=vol,step=1
-    bcm20 = volume_up,active_low,10,rotenc_id=vol,step=1
+    bcm24 = volume_up,active_low,10,rotenc_id=vol,step=1
 
-Each bcmN entry corresponds to the BCM pin of that number.
+Each bcmN entry corresponds to the BCM pin of that number.  Note: Older Pi's use `bcm20` instead of `bcm24`.
 
 You must assign an event, mode and bouncetime (ms) to your desired pins.
 
@@ -76,7 +76,7 @@ Eg::
     bcm5 = play_pause,active_low,250
     bcm6 = volume_down,active_low,250,step=1
     bcm16 = next,active_low,250
-    bcm20 = volume_up,active_low,250,step=1
+    bcm24 = volume_up,active_low,250,step=1
 
 
 Project resources
