@@ -61,6 +61,7 @@ Supported events:
 - volume_down
 - next
 - prev
+- playlist
 
 Supported modes:
 
@@ -78,6 +79,15 @@ Eg::
     bcm16 = next,active_low,250
     bcm20 = volume_up,active_low,250,step=1
 
+The playlist event allows to assign a playlist to a physical button. It requires an "uri" option. It first clears the tracklist, adds all tracks from the playlist and starts playback. 
+
+Eg::
+
+    [raspberry-gpio]
+    enabled = true
+    bcm17 = playlist,active_low,250,uri=m3u:test1.m3u8
+
+Hint: If you use the `Iris frontend <https://github.com/jaedb/Iris>`_, you can obtain the playlist URI in the tree-dots menu of the playlist.
 
 Project resources
 =================
