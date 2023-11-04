@@ -17,7 +17,15 @@ class PinConfig(config.ConfigValue):
     )
 
     valid_events = ValidList(
-        ["play_pause", "play_stop", "prev", "next", "volume_up", "volume_down"]
+        [
+            "play_pause",
+            "play_stop",
+            "prev",
+            "next",
+            "volume_up",
+            "volume_down",
+            "playlist",
+        ]
     )
 
     valid_modes = ValidList(["active_low", "active_high"])
@@ -61,6 +69,9 @@ class PinConfig(config.ConfigValue):
         for option in value[3:]:
             key, value = option.split("=")
             options[key] = value
+
+        if event == "playlist" and not "uri" in options:
+            raise ValueError(f'no "uri" option given for playlist')
 
         return self.tuple_pinconfig(event, active, bouncetime, options)
 

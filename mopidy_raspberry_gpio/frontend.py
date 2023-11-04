@@ -1,7 +1,7 @@
 import logging
 
 import pykka
-from mopidy import core
+from mopidy import core, models
 
 from .rotencoder import RotEncoder
 
@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
-    def __init__(self, config, core):
+    def __init__(self, config, core: core.Core):
         super().__init__()
         import RPi.GPIO as GPIO
 
@@ -30,6 +30,7 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
                 if settings is None:
                     continue
 
+                logger.info("Configuring " + key + " " + str(settings))
                 pull = GPIO.PUD_UP
                 edge = GPIO.FALLING
                 if settings.active == "active_high":
@@ -73,6 +74,9 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
             event = encoder.get_event()
 
         if event:
+            logger.info(
+                "GPIO bcm%d event: %s (%s)", pin, event, str(settings.options)
+            )
             self.dispatch_input(event, settings.options)
 
     def dispatch_input(self, event, options):
@@ -115,3 +119,11 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
         volume -= step
         volume = max(volume, 0)
         self.core.mixer.set_volume(volume)
+
+    def handle_playlist(self, config):
+        playlist: models.Playlist = self.core.playlists.lookup(
+            config.get("uri")
+        ).get()
+        self.core.tracklist.clear()
+        self.core.tracklist.add(tracks=playlist.tracks)
+        self.core.playback.play()
