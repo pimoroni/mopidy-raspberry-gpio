@@ -6,7 +6,7 @@ from mopidy import core, models
 from .rotencoder import RotEncoder
 
 logger = logging.getLogger(__name__)
-
+import time
 
 class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
     def __init__(self, config, core: core.Core):
@@ -67,12 +67,26 @@ class RaspberryGPIOFrontend(pykka.ThreadingActor, core.CoreListener):
                 return encoder
 
     def gpio_event(self, pin):
+        import RPi.GPIO as GPIO  # Import GPIO module here
         settings = self.pin_settings[pin]
         event = settings.event
         encoder = self.find_pin_rotenc(pin)
+
+        # Check button press duration for Pin 16
+        if pin == 16:
+            start_time = time.time()
+            while GPIO.input(pin) == GPIO.LOW:
+                time.sleep(0.1)
+            end_time = time.time()
+            press_duration = end_time - start_time
+
+            if press_duration < 1:
+                event = "next"
+            else:
+                event = "prev"
+
         if encoder:
             event = encoder.get_event()
-
         if event:
             logger.info(
                 "GPIO bcm%d event: %s (%s)", pin, event, str(settings.options)
